@@ -1,4 +1,4 @@
-
+import sys
 
 class TelaCliente:
     def __init__ (self, controlador):
@@ -22,11 +22,48 @@ class TelaCliente:
         print("1 - LOGAR")
         print("2 - CADASTRAR")
         print("3 - VOLTAR")
+        print("--------------------------")
         opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3])
         return opcao
 
-    def tela_cliente(self):
-        pass
+    def tela_entrada_cliente (self):
+        print("----------------------------------------")
+        nome = input(str("coloque seu nome de usuario ou cpf: "))
+        senha = input(str("coloque sua senha: "))
+        print("1 - ENTRA")
+        print("2 - VOLTAR")
+        print("----------------------------------------")
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2])
+        if opcao == 1:
+            return [nome, senha]
+        else:
+            return None
+
+    def tela_cliente (self):
+        print("--------------------------")
+        print("ESCOLHA 1 2 3 PARA NAVEGAR")
+        print("1 - VER CARRINHO")
+        print("2 - FINALIZAR COMPRA")
+        print("3 - SAIR")
+        print("--------------------------")
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3])
+        return opcao
 
     def tela_cadastro (self):
-        return [1, 2, 3]
+        print("----------------------------------------")
+        nome = input(str("coloque seu nome de usuario: "))
+        cpf = input(str("coloque seu cpf: "))
+        senha = self.senha_igual()
+        print("----------------------------------------")
+        return [nome, cpf, senha]
+
+    def senha_igual (self):
+        while True:
+            senha1 = input(str("coloque sua senha: "))
+            senha2 = input(str("coloque sua senha novamente: "))
+            try:
+                if senha1 != senha2:
+                    raise SyntaxError
+                return senha1
+            except SyntaxError:
+                print("Valores discrepantes, coloque senhas iguais")

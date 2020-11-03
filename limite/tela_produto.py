@@ -18,10 +18,12 @@ class TelaProduto:
 
     def corrige_float(self, valor):
         try:
-            valor_formatado = float("{:.2f}".format(valor))
+            novo_valor = float(valor)
+            valor_formatado = float("{:.2f}".format(novo_valor))
             return valor_formatado
         except:
             print("Valor inválido, coloque um número nestes modelos: 21.124, 5, 2.0")
+
 
     def mostra_opcoes(self):
         print("--------------------------")
@@ -37,24 +39,23 @@ class TelaProduto:
     def tela_ver_produto(self, produtos):
         print("--------------------------")
         for produto in produtos:
-            print("- ", produto.nome)
+            print("- {} / R${} / x{}".format(produto.nome, produto.preco, produto.estoque))
         print("0 - VOLTAR")
         opcao = self.le_inteiro("Escolha uma opção: ", [0])
         return opcao
 
     def tela_cadastra_produto(self):
         print("--------------------------")
-        nome = str(input("Nome do produto: "))   
-        preco = self.le_float(input("Preço do produto: "))
+        nome = input(str("Nome do produto: "))
+        preco = self.corrige_float(input("Preço do produto: "))
         estoque = int(input("Quantidade do estoque: "))
         print("--------------------------")
-        print("1 - CADASTRAR")
+        print("1 - CONFIRMAR")
         print("0 - VOLTAR")
         print("--------------------------")
         opcao = self.le_inteiro("Escolha uma opção: ", [1, 0])
         if opcao == 1:
             return [nome, preco, estoque]
-        else:
+        elif opcao == 2:
             return None
-
-
+    

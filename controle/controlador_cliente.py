@@ -22,7 +22,7 @@ class ControladorCliente:
                     print("--------------------------")
                     print("Prazer {}".format(valores.nome))
                     print("")
-                    switcher = {1: valores.carrinho, 2: self.finalizar_compra, 0: None}
+                    switcher = {1: "FUNÇÃO VER LISTA DE PRODUTOS", 2: valores.carrinho, 3: self.finalizar_compra, 0: None}
 
                     while True:
                         opcao = self.__tela_cliente.tela_cliente()

@@ -40,11 +40,12 @@ class TelaCliente:
 
     def tela_cliente (self):
         print("ESCOLHA 1 2 3 PARA NAVEGAR")
-        print("1 - VER CARRINHO")
-        print("2 - FINALIZAR COMPRA")
+        print("1 - VER PRODUTOS")
+        print("2 - VER CARRINHO")
+        print("3 - FINALIZAR COMPRA")
         print("0 - SAIR")
         print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 0])
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3, 0])
         return opcao
 
     def tela_cadastro (self):

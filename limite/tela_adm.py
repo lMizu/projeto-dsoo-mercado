@@ -32,7 +32,7 @@ class TelaAdm:
         print("-----------------------------")
         print("Bem vindo Administrador")
         print("")
-        print("ESCOLHA 1 2 3 PARA NAVEGAR")
+        print("ESCOLHA ENTRE 1 2 E 0 PARA NAVEGAR")
         print("1 - MODIFICAR PRODUTOS")
         print("2 - VER REGISTROS")
         print("0 - VOLTAR")

@@ -17,7 +17,7 @@ class TelaCliente:
 
     def mostra_tela_opcoes (self):
         print("--------------------------")
-        print("ESCOLHA 1 2 3 PARA NAVEGAR")
+        print("ESCOLHA ENTRE 1 2 E 0 PARA NAVEGAR")
         print("1 - LOGAR")
         print("2 - CADASTRAR")
         print("0 - SAIR")
@@ -39,7 +39,7 @@ class TelaCliente:
             return None
 
     def tela_cliente (self):
-        print("ESCOLHA 1 2 3 PARA NAVEGAR")
+        print("ESCOLHA ENTRE 1 2 3 E 0 PARA NAVEGAR")
         print("1 - VER PRODUTOS")
         print("2 - VER CARRINHO")
         print("3 - FINALIZAR COMPRA")

@@ -17,7 +17,7 @@ class TelaInicial:
 
     def mostra_tela_opcoes (self):
         print("-----------------------------")
-        print("ESCOLHA 1 2 3 PARA NAVEGAR")
+        print("ESCOLHA ENTRE 1 2 E 0 PARA NAVEGAR")
         print("1 - Entrar como CLIENTE")
         print("2 - Entrar como ADMINISTRADOR")
         print("0 - FECHAR PROGRAMAR")

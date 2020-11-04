@@ -1,3 +1,5 @@
+
+
 class Cliente:
     def __init__ (self, nome: str, cpf: str, senha: str):
         if isinstance (nome, str):

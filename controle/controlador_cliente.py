@@ -9,7 +9,7 @@ class ControladorCliente:
         self.__clientes = []
 
     def inicia (self):
-        self.abre_tela_inicial()
+        self.abre_tela_cliente()
     
     def entrar (self):
         while True:    
@@ -20,13 +20,13 @@ class ControladorCliente:
                 valores = self.verifica_entrada(inputs[0], inputs[1])
                 if valores != None:
                     print("--------------------------")
-                    print("Bem vindo {}".format(valores.nome))
+                    print("Prazer {}".format(valores.nome))
                     print("")
-                    switcher = {1: valores.carrinho, 2: self.finalizar_compra, 3: None}
+                    switcher = {1: valores.carrinho, 2: self.finalizar_compra, 0: None}
 
                     while True:
                         opcao = self.__tela_cliente.tela_cliente()
-                        if opcao == 3:
+                        if opcao == 0:
                             return switcher[opcao]
                         funcao_escolhida = switcher[opcao]
                         funcao_escolhida()
@@ -42,15 +42,11 @@ class ControladorCliente:
     def finalizar_compra (self):
         pass 
 
-    def sair (self):
-        pass
-
     def clientes (self):
         return self.__clientes
 
     def voltar (self):
-        print("bobi")
-        sys.exit(0)
+        return "fim"
 
     def cadastrar (self):
         while True:
@@ -68,7 +64,6 @@ class ControladorCliente:
                 print(verificacao)
                 print("Informe dados validos")
         
-
     def existe (self, novo_cliente):
         for cliente in self.__clientes:
             if cliente.nome == novo_cliente.nome:
@@ -77,11 +72,12 @@ class ControladorCliente:
                 return "Este cpf ja foi escolhido"
         return False
 
-
-    def abre_tela_inicial(self):
-        switcher = {1: self.entrar, 2: self.cadastrar, 3: self.voltar}
+    def abre_tela_cliente(self):
+        switcher = {1: self.entrar, 2: self.cadastrar, 0: self.voltar}
 
         while True:
             opcao  = self.__tela_cliente.mostra_tela_opcoes()
             funcao_escolhida = switcher[opcao]
-            funcao_escolhida()
+            if funcao_escolhida() == "fim":
+                return None
+             

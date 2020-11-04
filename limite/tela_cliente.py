@@ -15,15 +15,14 @@ class TelaCliente:
             except ValueError:
                 print("Valor incorreto, coloque um um destes valores {}".format(inteiros_validos))
 
-
     def mostra_tela_opcoes (self):
         print("--------------------------")
         print("ESCOLHA 1 2 3 PARA NAVEGAR")
         print("1 - LOGAR")
         print("2 - CADASTRAR")
-        print("3 - SAIR")
+        print("0 - SAIR")
         print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3])
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 0])
         return opcao
 
     def tela_login_cliente (self):
@@ -31,9 +30,9 @@ class TelaCliente:
         nome = input(str("coloque seu nome de usuario ou cpf: "))
         senha = input(str("coloque sua senha: "))
         print("1 - ENTRA")
-        print("2 - VOLTAR")
+        print("0 - VOLTAR")
         print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2])
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 0])
         if opcao == 1:
             return [nome, senha]
         else:
@@ -43,9 +42,9 @@ class TelaCliente:
         print("ESCOLHA 1 2 3 PARA NAVEGAR")
         print("1 - VER CARRINHO")
         print("2 - FINALIZAR COMPRA")
-        print("3 - SAIR")
+        print("0 - SAIR")
         print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3])
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 0])
         return opcao
 
     def tela_cadastro (self):
@@ -54,10 +53,10 @@ class TelaCliente:
         cpf = input(str("coloque seu cpf: "))
         senha = self.senha_igual()
         print("----------------------------------------")
-        print("1 - CADASTRAR")
-        print("2 - VOLTAR")
+        print("1 - CONFIRMAR CADASTRO")
+        print("0 - CANCELAR")
         print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2])
+        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 0])
         if opcao == 1:
             return [nome, cpf, senha]
         else:
@@ -69,7 +68,7 @@ class TelaCliente:
             senha2 = input(str("coloque sua senha novamente: "))
             try:
                 if senha1 != senha2:
-                    raise SyntaxError
+                    raise ValueError
                 return senha1
-            except SyntaxError:
+            except ValueError:
                 print("Valores discrepantes, coloque senhas iguais")

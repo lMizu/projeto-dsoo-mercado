@@ -43,6 +43,16 @@ class ControladorProduto:
             else:
                 return None
 
+    def deleta_produto(self):
+        while True:
+            dados = self.__tela_produto.tela_deleta_produto(self.__produtos)
+            if dados != None:
+                for produto in self.__produtos:
+                    if produto == dados[0]:
+                        self.__produtos.remove(produto)
+            else: 
+                return None
+
     def sair(self):
         sys.exit(0)
 
@@ -52,7 +62,7 @@ class ControladorProduto:
                 return True
 
     def abre_tela_produto(self):
-        switcher = {1: self.lista_produtos, 2: self.cadastra_produto, 3: self.altera_produto, 0: self.sair}
+        switcher = {1: self.lista_produtos, 2: self.cadastra_produto, 3: self.altera_produto, 4: self.deleta_produto, 0: self.sair}
         while True:
             opcao = self.__tela_produto.mostra_opcoes()
             funcao_escolhida = switcher[opcao]

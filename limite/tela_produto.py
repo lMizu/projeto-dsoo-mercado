@@ -49,9 +49,10 @@ class TelaProduto:
         print("1 - VER PRODUTOS")
         print("2 - CADASTRAR PRODUTO")
         print("3 - ALTERAR PRODUTO")
+        print("4 - DELETAR PRODUTO")
         print("0 - SAIR")
         print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", [1, 2, 3, 0])
+        opcao = self.le_inteiro("Escolha uma opção: ", [1, 2, 3, 4, 0])
         return opcao
 
     def tela_ver_produto(self, produtos):
@@ -107,6 +108,39 @@ class TelaProduto:
             novo_preco = self.define_preco()
             novo_estoque = self.define_estoque()
             return [produto_alterado, novo_nome, novo_preco, novo_estoque]
+
+    def tela_deleta_produto(self, produtos):
+        print("--------------------------")
+        if len(produtos) == 0:
+            print("Não há produtos cadastrados")
+        else:
+            print("ESCOLHA O PRODUTO QUE DESEJA DELETAR")
+        posicao = 0
+        produto_por_posicao = {}
+        lista_opcoes = []
+        for produto in produtos:
+            posicao += 1
+            print("{} - {}".format(posicao, produto.nome))
+            produto_por_posicao[posicao] = produto
+            lista_opcoes.append(posicao)
+        lista_opcoes.append(0)
+        print("0 - VOLTAR")
+        print("--------------------------")
+        opcao = self.le_inteiro("Escolha uma opção: ", lista_opcoes)
+        if opcao == 0:
+            return None
+        else:
+            produto_alterado = produto_por_posicao.get(opcao)
+            while True:
+                resposta = input(str("Tem certeza que quer deletar o produto {}? s/n".format(produto_alterado.nome)))
+                if resposta == "s":
+                    return [produto_alterado]
+                elif resposta == "n":
+                    return None
+                else:
+                    print("Resposta inválida, por favor responda com s ou n")
+            
+            
 
 
     

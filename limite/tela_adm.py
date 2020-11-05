@@ -1,19 +1,8 @@
+from limite.tela_le_inteiro import TelaLeInteiro
 
-
-class TelaAdm:
+class TelaAdm(TelaLeInteiro):
     def __init__ (self, controlador):
         self.__controlador = controlador
-    
-    def le_inteiro (self, mensagem: str = "", inteiros_validos: [] = None):
-        while True:
-            valor_lido = input(mensagem)
-            try:
-                inteiro = int(valor_lido)
-                if inteiros_validos and inteiro not in inteiros_validos:
-                    raise ValueError
-                return inteiro
-            except ValueError:
-                print("Valor incorreto, coloque um um destes valores {}".format(inteiros_validos))
 
     def tela_login_adm (self):
         print("----------------------------------------")

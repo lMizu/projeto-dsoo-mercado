@@ -1,9 +1,22 @@
 from limite.tela_adm import TelaAdm
 from entidade.adm import Adm
+from controle.controlador_produto import ControladorProduto
+from controle.controlador_registro import ControladorRegistro
+
 
 class ControladorAdm:
     def __init__ (self):
         self.__tela_adm = TelaAdm(self)
+        self.__controlador_produto = ControladorProduto()
+        self.__controlador_registro = ControladorRegistro()
+
+    @property
+    def controlador_produto (self):
+        return self.__controlador_produto
+
+    @property
+    def controlador_registro (self):
+        return self.__controlador_registro
 
     def inicia (self):
         self.abre_tela_adm()
@@ -19,6 +32,14 @@ class ControladorAdm:
                     return None
         else:
             return None
+    def modificar_produto (self):
+        self.__controlador_produto.inicia()
+
+    def ver_registro (self):
+        self.__controlador_registro.inicia()
+
+    def voltar (self):
+        return "fim"
 
     def login (self):
         while True:    
@@ -36,12 +57,3 @@ class ControladorAdm:
         if (Adm().login == nome) and (Adm().senha == senha):
             return True
         return False
-
-    def modificar_produto (self):
-        pass
-
-    def ver_registro (self):
-        pass
-
-    def voltar (self):
-        return "fim"

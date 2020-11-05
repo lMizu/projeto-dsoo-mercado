@@ -6,7 +6,9 @@ import sys
 class ControladorTela:
     def __init__ (self):
         self.__tela_inicial = TelaInicial(self)
-
+        self.__controlador_adm = ControladorAdm()
+        self.__controlador_cliente = ControladorCliente(self.__controlador_adm)
+        
     def inicia (self):
         self.abre_tela_inicial()
 
@@ -19,10 +21,10 @@ class ControladorTela:
             funcao_escolhida()
 
     def entrar_como_cliente (self):
-        ControladorCliente().inicia()
+        self.__controlador_cliente.inicia()
 
     def entrar_como_adm (self):
-        ControladorAdm().inicia()
+        self.__controlador_adm.inicia()
 
     def fechar (self):
         print("Esperamos te ver novamente em breve! <3")

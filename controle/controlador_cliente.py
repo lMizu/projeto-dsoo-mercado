@@ -1,12 +1,15 @@
 from limite.tela_cliente import TelaCliente
 from entidade.cliente import Cliente
+from entidade.produto import Produto
+from controle.controlador_adm import ControladorAdm
 import sys
 
 
 class ControladorCliente:
-    def __init__ (self):
+    def __init__ (self, adm):
         self.__tela_cliente = TelaCliente(self)
-        self.__clientes = []
+        self.__clientes = [Cliente("Teste", "a", "a")]
+        self.__adm = adm
 
     def inicia (self):
         self.abre_tela_cliente()
@@ -17,30 +20,98 @@ class ControladorCliente:
             if inputs == None:
                 return None
             else:
-                valores = self.verifica_entrada(inputs[0], inputs[1])
-                if valores != None:
+                cliente = self.verifica_entrada(inputs[0], inputs[1])
+                if cliente != None:
                     print("--------------------------")
-                    print("Prazer {}".format(valores.nome))
+                    print("Prazer {}".format(cliente.nome))
                     print("")
-                    switcher = {1: "FUNÇÃO VER LISTA DE PRODUTOS", 2: valores.carrinho, 3: self.finalizar_compra, 0: None}
+                    switcher = {1: self.ver_lista_de_produtos, 2: self.ver_carrinho, 3: self.remover_do_carrinho, 4: self.limpar_carrinho, 5: self.finalizar_compra, 0: None}
 
                     while True:
                         opcao = self.__tela_cliente.tela_cliente()
                         if opcao == 0:
                             return switcher[opcao]
+
                         funcao_escolhida = switcher[opcao]
-                        funcao_escolhida()
+                        funcao_escolhida(cliente)
                 else:
                     print("dados incorretos")
 
     def verifica_entrada (self, nome, senha):
         for cliente in self.clientes():
-            if ((cliente.nome or cliente.cpf) == nome) and (cliente.senha == senha):
+            if ((cliente.nome == nome) or (cliente.cpf == nome)) and (cliente.senha == senha):
                 return cliente
         return None
 
-    def finalizar_compra (self):
-        pass 
+    def ver_carrinho (self, cliente):
+        print("----------------------------")
+        i = 1
+        if len(cliente.carrinho()) == 0:
+            print("CARRINHO VAZIO")
+        for item in cliente.carrinho():
+            print("{} - {}".format(i, item.nome))
+            i += 1
+        print("----------------------------")
+
+    def ver_lista_de_produtos (self, cliente):
+        while True:    
+            self.__adm.controlador_produto.lista_produtos()
+            lista = self.__adm.controlador_produto.produtos()
+            opcao = self.__tela_cliente.colocar_item_no_carrinho(lista)
+
+            if opcao == None:
+                return None
+            self.coloca_no_carrinho(cliente, opcao)
+        
+    def coloca_no_carrinho (self, cliente, opcao):
+        cliente.carrinho().append(self.__adm.controlador_produto.produtos()[opcao - 1])
+        self.__tela_cliente.tela_add_ao_carrinho()
+
+    def remover_do_carrinho (self, cliente):
+        while True:
+            self.ver_carrinho(cliente)
+            print("0 - VOLTAR")
+            opcao = self.__tela_cliente.remove_do_carrinho(cliente.carrinho())
+            if opcao == None:
+                return None
+            cliente.remove_do_carrinho(opcao)
+
+    def limpar_carrinho (self, cliente):
+        opcao = self.__tela_cliente.limpar_carrinho()
+        if opcao:
+            cliente.limpa_carrinho()
+            print("CARRINHO LIMPO")
+            print("----------------------------------------")
+            return None
+        else:
+            return None
+
+    def finalizar_compra (self, cliente):
+        self.ver_carrinho(cliente)
+        valor_da_compra = 0
+        desconto = 0
+        for item in cliente.carrinho():
+            valor_da_compra += item.preco
+        opcao = self.__tela_cliente.comprar(valor_da_compra)
+        if opcao:
+            for item in cliente.carrinho():
+                if item.estoque > 0:
+                    novo_estoque = item.estoque - 1
+                    posicao = self.__adm.controlador_produto.produtos().index(item)
+                    self.__adm.controlador_produto.produtos()[posicao].estoque = novo_estoque
+                else:
+                    desconto += item.preco
+                    print("Sem estoque de {}".format(item.nome))
+            if desconto == 0:
+                self.__tela_cliente.pagamento(desconto)
+                cliente.limpa_carrinho()
+                return None
+            else:
+                self.__tela_cliente.pagamento(desconto)
+                cliente.limpa_carrinho()
+                return None
+        else:
+            return None
 
     def clientes (self):
         return self.__clientes

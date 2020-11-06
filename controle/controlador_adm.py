@@ -7,8 +7,8 @@ from controle.controlador_registro import ControladorRegistro
 class ControladorAdm:
     def __init__ (self):
         self.__tela_adm = TelaAdm(self)
-        self.__controlador_produto = ControladorProduto()
-        self.__controlador_registro = ControladorRegistro()
+        self.__controlador_produto = ControladorProduto(self)
+        self.__controlador_registro = ControladorRegistro(self)
 
     @property
     def controlador_produto (self):

@@ -3,7 +3,7 @@
 class Adm:
     def __init__ (self):
         self.__login = "adm"
-        self.__senha = "bobi123"
+        self.__senha = "bobi"
 
     @property
     def login (self):

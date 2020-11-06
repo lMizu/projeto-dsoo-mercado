@@ -128,6 +128,7 @@ class ControladorCliente:
                 return None
             verificacao = self.existe(novo_cliente)
             if verificacao == False:
+                self.__adm.controlador_registro.cliente_foi_incluido(novo_cliente)
                 self.__clientes.append(novo_cliente)
                 print("cadastrado com sucesso")
                 return None

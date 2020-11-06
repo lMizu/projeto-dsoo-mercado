@@ -3,8 +3,8 @@ from entidade.produto import Produto
 import sys
 
 class ControladorProduto:
-
-    def __init__(self):
+    def __init__(self, adm):
+        self.__adm = adm
         self.__tela_produto = TelaProduto(self)
         self.__produtos = [Produto("Uva", 10.0, 4), Produto("Laranja", 5.0, 2)]
 
@@ -27,6 +27,7 @@ class ControladorProduto:
             if self.existe(novo_produto):
                 print("Um produto com este mesmo nome já foi cadastrado")
             else:
+                self.__adm.controlador_registro.produto_foi_incluido(novo_produto)
                 self.__produtos.append(novo_produto)
                 print("Produto cadastrado com sucesso")
                 return None
@@ -37,6 +38,8 @@ class ControladorProduto:
             if dados != None:
                 for produto in self.__produtos:
                     if produto == dados[0]:
+                        produto_velho = Produto(produto.nome, produto.preco, produto.estoque)
+                        self.__adm.controlador_registro.produto_foi_alterado(produto_velho)
                         produto.nome = dados[1]
                         produto.preco = dados[2]
                         produto.estoque = dados[3]
@@ -49,6 +52,7 @@ class ControladorProduto:
             if dados != None:
                 for produto in self.__produtos:
                     if produto == dados[0]:
+                        self.__adm.controlador_registro.produto_foi_excluido(produto)
                         self.__produtos.remove(produto)
             else: 
                 return None

@@ -19,6 +19,9 @@ class ControladorRegistro:
     def voltar(self):
         return "fim"
 
+    def produtos_excluidos (self):
+        return self.__lista_produtos_excluidos
+
     def cliente_foi_incluido (self, cliente):
         self.__lista_clientes_incluidos.append(cliente)
 

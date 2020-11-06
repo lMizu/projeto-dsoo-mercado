@@ -95,8 +95,12 @@ class ControladorCliente:
             for item in cliente.carrinho():
                 if item.estoque > 0:
                     novo_estoque = item.estoque - 1
-                    posicao = self.__adm.controlador_produto.produtos().index(item)
-                    self.__adm.controlador_produto.produtos()[posicao].estoque = novo_estoque
+                    if item not in self.__adm.controlador_registro.produtos_excluidos():
+                        posicao = self.__adm.controlador_produto.produtos().index(item)
+                        self.__adm.controlador_produto.produtos()[posicao].estoque = novo_estoque
+                    else:
+                        desconto += item.preco
+                        print("Sem estoque de {}".format(item.nome))
                 else:
                     desconto += item.preco
                     print("Sem estoque de {}".format(item.nome))

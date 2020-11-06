@@ -8,7 +8,7 @@ import sys
 class ControladorCliente:
     def __init__ (self, adm):
         self.__tela_cliente = TelaCliente(self)
-        self.__clientes = [Cliente("Teste", "a", "a")]
+        self.__clientes = []
         self.__adm = adm
 
     def inicia (self):

@@ -49,11 +49,12 @@ class TelaProduto(TelaLeInteiro):
         print("PRODUTOS CADASTRADOS:")
         if len(produtos) == 0:
             print("Não há produtos cadastrados")
-        i = 1
         for produto in produtos:
-            print("{} - {} / R${} / x{}".format(i, produto.nome, produto.preco, produto.estoque))
-            i += 1
-        return print("0 - VOLTAR")
+            print("{} / R${} / x{}".format(produto.nome, produto.preco, produto.estoque))
+        print("0 - VOLTAR")
+        opcao = self.le_inteiro("Escolha uma opção: ", [0])
+        if opcao == 0:
+            return None
 
     def tela_cadastra_produto(self):
         print("--------------------------")
@@ -121,7 +122,7 @@ class TelaProduto(TelaLeInteiro):
         else:
             produto_alterado = produto_por_posicao.get(opcao)
             while True:
-                resposta = input(str("Tem certeza que quer deletar o produto {}? s/n".format(produto_alterado.nome)))
+                resposta = input(str("Tem certeza que quer deletar o produto {}? s/n: ".format(produto_alterado.nome)))
                 if resposta == "s":
                     return [produto_alterado]
                 elif resposta == "n":

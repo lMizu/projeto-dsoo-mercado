@@ -44,28 +44,26 @@ class ControladorCliente:
         return None
 
     def ver_carrinho (self, cliente):
-        print("----------------------------")
-        i = 1
-        if len(cliente.carrinho()) == 0:
-            print("CARRINHO VAZIO")
-        for item in cliente.carrinho():
-            print("{} - {}".format(i, item.nome))
-            i += 1
-        print("----------------------------")
+        while True:
+            opcao = self.__tela_cliente.tela_ver_carrinho(cliente.carrinho())
+            if opcao == 0:
+                return None
 
     def ver_lista_de_produtos (self, cliente):
         while True:    
-            self.__adm.controlador_produto.lista_produtos()
             lista = self.__adm.controlador_produto.produtos()
-            opcao = self.__tela_cliente.colocar_item_no_carrinho(lista)
-
-            if opcao == None:
+            produto = self.__tela_cliente.colocar_item_no_carrinho(lista)
+            if produto == None:
                 return None
-            self.coloca_no_carrinho(cliente, opcao)
+            else:
+                self.coloca_no_carrinho(cliente, produto)
         
-    def coloca_no_carrinho (self, cliente, opcao):
-        cliente.carrinho().append(self.__adm.controlador_produto.produtos()[opcao - 1])
-        self.__tela_cliente.tela_add_ao_carrinho()
+    def coloca_no_carrinho (self, cliente, produto):
+        cliente.carrinho().append(produto)
+        while True:
+            opcao = self.__tela_cliente.tela_adicionado_ao_carrinho()
+            if opcao == 0:
+                return None
 
     def remover_do_carrinho (self, cliente):
         while True:
@@ -87,7 +85,7 @@ class ControladorCliente:
             return None
 
     def finalizar_compra (self, cliente):
-        self.ver_carrinho(cliente)
+        #self.ver_carrinho(cliente)
         valor_da_compra = 0
         desconto = 0
         for item in cliente.carrinho():

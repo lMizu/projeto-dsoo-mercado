@@ -56,26 +56,50 @@ class ControladorRegistro:
                 return None
 
     def produto_mais_caro(self):
+        foi_excluido = True
         for produto in self.__adm.controlador_produto.produtos():
-            if self.__produto_mais_caro == None:
-                self.__produto_mais_caro = produto
-            else:
-                if produto.preco > self.__produto_mais_caro.preco:
+            if produto == self.__produto_mais_caro:
+                foi_excluido = False
+        if foi_excluido:
+            self.__produto_mais_caro = None
+            for produto in self.__adm.controlador_produto.produtos():
+                if self.__produto_mais_caro == None:
                     self.__produto_mais_caro = produto
-
+                else:
+                    if produto.preco > self.__produto_mais_caro.preco:
+                        self.__produto_mais_caro = produto
+        else:
+            for produto in self.__adm.controlador_produto.produtos():
+                if self.__produto_mais_caro == None:
+                    self.__produto_mais_caro = produto
+                else:
+                    if produto.preco > self.__produto_mais_caro.preco:
+                        self.__produto_mais_caro = produto
         while True:
             opcao = self.__tela_registro.tela_ver_mais_caro(self.__produto_mais_caro)
             if opcao == 0:
                 return None
 
     def produto_mais_barato(self):
+        foi_excluido = True
         for produto in self.__adm.controlador_produto.produtos():
-            if self.__produto_mais_barato == None:
-                self.__produto_mais_barato = produto
-            else:
-                if produto.preco < self.__produto_mais_barato.preco:
+            if produto == self.__produto_mais_barato:
+                foi_excluido = False
+        if foi_excluido:
+            self.__produto_mais_barato = None
+            for produto in self.__adm.controlador_produto.produtos():
+                if self.__produto_mais_barato == None:
                     self.__produto_mais_barato = produto
-
+                else:
+                    if produto.preco < self.__produto_mais_barato.preco:
+                        self.__produto_mais_barato = produto
+        else:
+            for produto in self.__adm.controlador_produto.produtos():
+                if self.__produto_mais_barato == None:
+                    self.__produto_mais_barato = produto
+                else:
+                    if produto.preco < self.__produto_mais_barato.preco:
+                        self.__produto_mais_barato = produto
         while True:
             opcao = self.__tela_registro.tela_ver_mais_barato(self.__produto_mais_barato)
             if opcao == 0:

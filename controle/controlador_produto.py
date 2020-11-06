@@ -15,7 +15,10 @@ class ControladorProduto:
         self.abre_tela_produto()
 
     def lista_produtos(self):
-        return self.__tela_produto.tela_ver_produto(self.__produtos)
+        while True:
+            opcao = self.__tela_produto.tela_ver_produto(self.__produtos)
+            if opcao == None:
+                return None
 
     def cadastra_produto(self):
         while True:

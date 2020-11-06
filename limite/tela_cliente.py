@@ -68,18 +68,45 @@ class TelaCliente(TelaLeInteiro):
 
     def colocar_item_no_carrinho (self, lista_de_produtos):
         print("----------------------------")
-        tamanho_da_lista = self.lista(len(lista_de_produtos))
-
-        opcao = self.le_inteiro("Escolha um numero para adicionar o produto ao carrinho: ", tamanho_da_lista)
-        if opcao == 0:
-            print("----------------------------")
-            return None
+        if len(lista_de_produtos) == 0:
+                print("Não há produtos no mercado")
         else:
-            return opcao
+            print("ESCOLHA O PRODUTO QUE DESEJA ADICIONAR AO CARRINHO")
+            posicao = 0
+            produto_por_posicao = {}
+            lista_opcoes = []
+            for produto in lista_de_produtos:
+                posicao += 1
+                print("{} - {} / R${} / x{}".format(posicao, produto.nome, produto.preco, produto.estoque))
+                produto_por_posicao[posicao] = produto
+                lista_opcoes.append(posicao)
+            lista_opcoes.append(0)
+            print("0 - VOLTAR")
+            print("--------------------------")
+            opcao = self.le_inteiro("Escolha uma opção: ", lista_opcoes)
+            if opcao == 0:
+                return None
+            else:
+                return produto_por_posicao.get(opcao)
 
-    def tela_add_ao_carrinho(self):
-        print("")
+    def tela_adicionado_ao_carrinho(self):
+        print("----------------------------")
         print("ADICIONADO COM SUCESSO")
+        print("0 - OK")
+        print("----------------------------")
+        opcao = self.le_inteiro("Escolha uma opção: ", [0])
+        return opcao
+
+    def tela_ver_carrinho(self, carrinho):
+        print("----------------------------")
+        if len(carrinho) == 0:
+            print("CARRINHO VAZIO")
+        for item in carrinho:
+            print("- {}".format(item.nome))
+        print("0 - VOLTAR")
+        print("----------------------------------------")
+        opcao = self.le_inteiro("Escolha uma opcao: ", [0])
+        return opcao
 
     def lista (self, tamanho):
         nova_lista = []

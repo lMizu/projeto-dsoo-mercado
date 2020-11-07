@@ -10,7 +10,7 @@ class TelaInicial(TelaLeInteiro):
         print("ESCOLHA ENTRE 1 2 E 0 PARA NAVEGAR")
         print("1 - Entrar como CLIENTE")
         print("2 - Entrar como ADMINISTRADOR")
-        print("0 - FECHAR PROGRAMAR")
+        print("0 - FECHAR PROGRAMA")
         print("-----------------------------")
         opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 0])
         return opcao

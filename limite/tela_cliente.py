@@ -42,6 +42,42 @@ class TelaCliente(TelaLeInteiro):
         else:
             return None
         
+    def cadastro_sucesso (self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text('Cadastrado com sucesso!')],
+                    [sg.Button('Voltar')]
+                ]
+        
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()
+    
+    def fracasso_nome (self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text('Este nome ja foi escolhido')],
+                    [sg.Button('Tentar novamente')]
+                ]
+        
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()
+    
+    def fracasso_cpf (self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text('Este CPF ja foi escolhido')],
+                    [sg.Button('Tentar novamente')]
+                ]
+        
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()
+
     def tela_erro(self):
         sg.ChangeLookAndFeel('Reddit')
 
@@ -83,18 +119,6 @@ class TelaCliente(TelaLeInteiro):
         window.close()
 
         return opcao
-
-        # print("BEM VINDO ", nome)
-        # print("ESCOLHA ENTRE 1 2 3 4 5 E 0 PARA NAVEGAR")
-        # print("1 - VER PRODUTOS")
-        # print("2 - VER CARRINHO")
-        # print("3 - REMOVER PRODUTO DO CARRINHO")
-        # print("4 - LIMPAR CARRINHO")
-        # print("5 - FINALIZAR COMPRA")
-        # print("0 - SAIR")
-        # print("--------------------------")
-        # opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 3, 4, 5, 0])
-        # return opcao
 
     def tela_cadastro (self):
         while True:
@@ -199,33 +223,90 @@ class TelaCliente(TelaLeInteiro):
             return opcao
 
     def limpar_carrinho (self):
-        print("1 - LIMPAR")
-        print("0 - VOLTAR")
-        print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 0])
-        if opcao == 1:
-            return True
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Button('Limpar', size=(20, 2))],
+                    [sg.Button('Voltar', size=(20, 2))]
+                ]
+        window = sg.Window('Cliente').Layout(layout)
+        button = window.Read()
+
+        if button[0] == 'Limpar':
+            opcao = True
         else:
-            return False
+            opcao = False
+
+        window.close()
+        return opcao
+
+    def limpar_sucesso (self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text('Carrinho Limpo!')],
+                    [sg.Button('Voltar')]
+                ]
+        
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()
 
     def comprar (self, valor):
-        print("Deu {} reais a compra".format(valor))
-        print("1 - PAGAR")
-        print("0 - VOLTAR")
-        print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 0])
-        if opcao == 1:
-            return True
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text("Deu {} reais a compra".format(valor))],
+                    [sg.Button('Ir para o pagamento', size=(20, 2))],
+                    [sg.Button('Voltar', size=(20, 2))]
+                ]
+        window = sg.Window('Cliente').Layout(layout)
+        button = window.Read()
+
+        if button[0] == 'Ir para o pagamento':
+            opcao = True
         else:
-            return False
+            opcao = False
+
+        window.close()
+        return opcao
 
     def pagamento (self, desconto):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Input("Coloque o endereço de sua carteira")],
+                    [sg.Button('Pagar', size=(20, 2))]
+                ]
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+
         if desconto == 0:
-            input("Coloque o endereço de sua carteira: ")
-            print("Transação concluida com sucesso")
-            print("---------------------------------")
+            self.pagamento_sucesso()
         else:
-            print("Alguns itens foram removidos do carrinho por falta de estoque, logo, Você teve uma correção de -{} reais no preço".format(desconto))
-            input("Coloque o endereço de sua carteira: ")
-            print("Transação concluida com sucesso")
-            print("---------------------------------")
+            self.pagamento_desconto(desconto)
+
+        window.close()
+
+    def pagamento_sucesso (self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text("Transação concluida com sucesso")],
+                    [sg.Button('Voltar', size=(20, 2))]
+                ]
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()
+
+    def pagamento_desconto (self, desconto):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [  
+                    [sg.Text("Alguns itens foram removidos do carrinho por falta de estoque, logo, Você teve uma correção de -{} reais no preço".format(desconto))],
+                    [sg.Text("Transação concluida com sucesso")],
+                    [sg.Button('Voltar', size=(20, 2))]
+                ]
+        window = sg.Window('Cliente').Layout(layout)
+        window.Read()
+        window.close()

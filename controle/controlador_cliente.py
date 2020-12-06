@@ -75,14 +75,12 @@ class ControladorCliente:
         opcao = self.__tela_cliente.limpar_carrinho()
         if opcao:
             cliente.limpa_carrinho()
-            print("CARRINHO LIMPO")
-            print("----------------------------------------")
+            self.__tela_cliente.limpar_sucesso()
             return None
         else:
             return None
 
     def finalizar_compra (self, cliente):
-        #self.ver_carrinho(cliente)
         valor_da_compra = 0
         desconto = 0
         for item in cliente.carrinho():
@@ -129,18 +127,15 @@ class ControladorCliente:
             if verificacao == False:
                 self.__adm.controlador_registro.cliente_foi_incluido(novo_cliente)
                 self.__clientes.append(novo_cliente)
-                print("cadastrado com sucesso")
+                self.__tela_cliente.cadastro_sucesso()
                 return None
-            else:
-                print(verificacao)
-                print("Informe dados validos")
         
     def existe (self, novo_cliente):
         for cliente in self.__clientes:
             if cliente.nome == novo_cliente.nome:
-                return "Este nome ja foi escolhido"
+                return self.__tela_cliente.fracasso_nome()
             if cliente.cpf == novo_cliente.cpf:
-                return "Este cpf ja foi escolhido"
+                return self.__tela_cliente.fracasso_cpf()
         return False
 
     def abre_tela_cliente(self):

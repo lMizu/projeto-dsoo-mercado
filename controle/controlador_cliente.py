@@ -22,20 +22,17 @@ class ControladorCliente:
             else:
                 cliente = self.verifica_entrada(inputs[0], inputs[1])
                 if cliente != None:
-                    print("--------------------------")
-                    print("Prazer {}".format(cliente.nome))
-                    print("")
                     switcher = {1: self.ver_lista_de_produtos, 2: self.ver_carrinho, 3: self.remover_do_carrinho, 4: self.limpar_carrinho, 5: self.finalizar_compra, 0: None}
 
                     while True:
-                        opcao = self.__tela_cliente.tela_cliente()
+                        opcao = self.__tela_cliente.tela_cliente(cliente.nome)
                         if opcao == 0:
                             return switcher[opcao]
 
                         funcao_escolhida = switcher[opcao]
                         funcao_escolhida(cliente)
                 else:
-                    print("dados incorretos")
+                    self.__tela_cliente.tela_erro()
 
     def verifica_entrada (self, nome, senha):
         for cliente in self.clientes():

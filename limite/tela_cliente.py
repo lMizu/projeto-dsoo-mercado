@@ -185,11 +185,11 @@ class TelaCliente(TelaBase):
             ]
         else:
             layout = []
-            for i in range(len(produtos)):
+            for produto in produtos:
                 layout.append(
-                    [sg.Button(produtos[i].nome, size=(20, 2))]
+                    [sg.Button(produto.nome, size=(20, 2))]
                 )
-                switcher[produtos[i].nome] = produtos[i]
+                switcher[produto.nome] = produto
         layout.append(
             [sg.Button('   Voltar   ', size=(20, 1))]
         )

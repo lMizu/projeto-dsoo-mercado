@@ -8,13 +8,13 @@ class ControladorProduto:
     def __init__(self, adm):
         self.__adm = adm
         self.__tela_produto = TelaProduto(self)
-        self.__produtos = []
-
-    def tela (self):
-        return self.__tela_produto
+        self.__produtos = ProdutoDao()
 
     @property
     def produtos(self):
+        return self.__produtos.get_all()
+
+    def produtoDao(self):
         return self.__produtos
 
     def inicia(self):
@@ -22,8 +22,8 @@ class ControladorProduto:
 
     def lista_produtos(self):
         while True:
-            opcao = self.__tela_produto.tela_ver_produtos(
-                self.__produtos)
+            produtos = self.__produtos.get_all()
+            opcao = self.__tela_produto.tela_ver_produtos(produtos)
             if opcao == 0:
                 return None
             else:
@@ -35,12 +35,14 @@ class ControladorProduto:
             if dados != None:
                 novo_produto = Produto(dados[0], dados[1], dados[2])
                 if self.existe(novo_produto):
-                    #Adicionar dialog
                     return None
                 else:
                     self.__adm.controlador_registro.produto_foi_incluido(
                         novo_produto)
-                    self.__produtos.append(novo_produto)
+                    print(novo_produto.nome)
+                    print(self.__produtos.get_all())
+                    self.__produtos.add(novo_produto)
+                
                     return None
             else:
                 return None
@@ -48,28 +50,26 @@ class ControladorProduto:
     def edita_produto(self, produto):
         while True:
             dados = self.__tela_produto.tela_edita_produto(produto)
-            if dados == 0:
+            if dados == 0 or dados == None:
                 return None
             elif dados == 1:
-                # confirmar remoção
-                self.__produtos.remove(produto)
+                self.__produtos.remove(produto.nome)
                 self.__adm.controlador_registro.produto_foi_excluido(produto)
-                # excluido com sucesso
+                return None
             else:
                 produto_velho = Produto(
                     produto.nome, produto.preco, produto.estoque)
                 self.__adm.controlador_registro.produto_foi_alterado(
                     produto_velho)
-                produto.nome = dados[0]
-                produto.preco = dados[1]
-                produto.estoque = dados[2]
-                # atualizado com sucesso
-
+                produto_atualizado = Produto(dados[0], dados[1], dados[2])
+                self.__produtos.remove(produto.nome)
+                self.__produtos.add(produto_atualizado)
+                return None
     def sair(self):
         return "fim"
 
     def existe(self, novo_produto):
-        for produto in self.__produtos:
+        for produto in self.__produtos.get_all():
             if produto.nome == novo_produto.nome:
                 return True
 

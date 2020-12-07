@@ -3,6 +3,7 @@ from entidade.cliente import Cliente
 from entidade.produto import Produto
 from controle.controlador_adm import ControladorAdm
 from dao.cliente_dao import ClienteDao
+from dao.produto_dao import ProdutoDao
 import sys
 
 
@@ -91,8 +92,11 @@ class ControladorCliente:
                 if item.estoque > 0:
                     novo_estoque = item.estoque - 1
                     if item not in self.__adm.controlador_registro.produtos_excluidos():
-                        posicao = self.__adm.controlador_produto.produtos.index(item)
-                        self.__adm.controlador_produto.produtos[posicao].estoque = novo_estoque
+                        produto_dao = self.__adm.controlador_produto.produtoDao()
+                        produto_antigo_estoque = produto_dao.get(item.nome)
+                        produto_alterado = Produto(produto_antigo_estoque.nome, produto_antigo_estoque.preco, novo_estoque)
+                        produto_dao.remove(produto_antigo_estoque.nome)
+                        produto_dao.add(produto_alterado)
                     else:
                         desconto += item.preco
                         print("Sem estoque de {}".format(item.nome))

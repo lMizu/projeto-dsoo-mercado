@@ -33,13 +33,14 @@ class TelaProduto(TelaBase):
             ]
         else:
             layout = []
-            for i in range(len(produtos)):
+            for produto in produtos:
+                print(produto)
                 layout.append(
-                    [sg.Button(produtos[i].nome, size=(20, 2))]
+                    [sg.Button(produto.nome, size=(20, 2))]
                 )
-                switcher[produtos[i].nome] = produtos[i]
+                switcher[produto.nome] = produto
         layout.append(
-            [sg.Button('   Voltar   ', size=(20, 1))]
+            [sg.Button('   Voltar   ', size=(20, 2))]
         )
 
         window = sg.Window('Produtos').Layout(layout)
@@ -56,12 +57,13 @@ class TelaProduto(TelaBase):
 
             layout = [
                 [sg.Text('Nome', size=(20, 1)),
-                sg.InputText('', size=(20, 2))],
+                 sg.InputText('', size=(20, 2))],
                 [sg.Text('Preço', size=(20, 1)),
-                sg.InputText(float(), size=(20, 2))],
+                 sg.InputText(float(), size=(20, 2))],
                 [sg.Text('Estoque', size=(20, 1)),
-                sg.InputText(int(), size=(20, 2))],
-                [sg.Button('   Voltar   ', size=(10, 1)),sg.Button('Cadastrar', size=(10, 1))]
+                 sg.InputText(int(), size=(20, 2))],
+                [sg.Button('   Voltar   ', size=(10, 1)),
+                 sg.Submit('Cadastrar', size=(10, 1))]
             ]
 
             window = sg.Window('Cadastrar produtos').Layout(layout)
@@ -80,29 +82,38 @@ class TelaProduto(TelaBase):
             window.close()
 
     def tela_edita_produto(self, produto):
-        sg.ChangeLookAndFeel('Reddit')
+        while True:
+            sg.ChangeLookAndFeel('Reddit')
 
-        layout = [
-            [sg.Text('Nome', size=(20, 1)),
-             sg.InputText(produto.nome, size=(20, 2))],
-            [sg.Text('Preço', size=(20, 1)),
-             sg.InputText(produto.preco, size=(20, 2))],
-            [sg.Text('Estoque inicial', size=(20, 1)),
-             sg.InputText(produto.estoque, size=(20, 2))],
-            [sg.Button('  Voltar  '), sg.Submit('Atualizar'), sg.Submit('Deletar')]
-        ]
+            layout = [
+                [sg.Text('Nome', size=(20, 1)),
+                sg.InputText(produto.nome, size=(20, 2))],
+                [sg.Text('Preço', size=(20, 1)),
+                sg.InputText(produto.preco, size=(20, 2))],
+                [sg.Text('Estoque inicial', size=(20, 1)),
+                sg.InputText(produto.estoque, size=(20, 2))],
+                [sg.Button('  Voltar  '), sg.Submit(
+                    'Atualizar'), sg.Button('Deletar')]
+            ]
 
-        window = sg.Window('Cadastro de produto').Layout(layout)
-        button, value = window.Read()
+            window = sg.Window('Editar produto').Layout(layout)
+            button, value = window.Read()
 
-        if button == '  Voltar  ':
-            return 0
-        elif button == 'Deletar':
-            return 1
-        elif button == 'Atualizar':
-            formated_values = self.check_values([value[0], value[1], value[2]])
-            if (formated_values != 'Error'):
-                return formated_values
-            else:
-                # mostrar erro nos campos
-                return ""
+            if button == '  Voltar  ':
+                window.close()
+                return 0
+            elif button == 'Deletar':
+                self.dialogBox('Produto', 'Você deletou o produto {}'.format(produto.nome), False)
+                window.close()
+                return 1
+            elif button == 'Atualizar':
+                checked_values = self.check_values([value[0], value[1], value[2]])
+                if (checked_values != None):
+                    if checked_values[0] != produto.nome or checked_values[1] != produto.preco or checked_values[2] != produto.estoque:
+                        self.dialogBox('Produto', 'Você atualizou o produto {} com sucesso!'.format(produto.nome), False)
+                        window.close()
+                        return checked_values      
+                    else:
+                        self.dialogBox('Produto', 'Modifique algum campo para atualizar', False)
+            window.close()
+

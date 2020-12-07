@@ -17,6 +17,9 @@ class Produto:
         if isinstance(nome, str):
             self.__nome = nome
 
+    def nome1(self):
+        return self.__nome
+
     @property
     def preco(self):
         return self.__preco

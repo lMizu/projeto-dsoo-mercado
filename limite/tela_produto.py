@@ -1,137 +1,119 @@
-from limite.tela_le_inteiro import TelaLeInteiro
+from limite.tela_base import TelaBase
+import PySimpleGUI as sg
 
-class TelaProduto(TelaLeInteiro):
-    
+
+class TelaProduto(TelaBase):
+
     def __init__(self, controlador):
         self.__controlador = controlador
 
-    def define_nome(self):
-        while True:
-            entrada_nome = input(str("Nome do produto: "))
-            if len(entrada_nome) > 0:
-                return entrada_nome
-            else:
-                print("Adicione um nome ao produto")       
+    def check_values(self, values):
+        try:
+            if len(values[0]) == 0 or len(values[1]) == 0 or len(values[2]) == 0:
+                raise ValueError
+            price_to_float = float('{:2f}'.format(float(values[1])))
+            stock_to_int = int(values[2])
 
-    def define_preco(self):
-        while True:
-            entrada_preco = input("Preço do produto: ")
-            try:
-                novo_preco = float(entrada_preco)
-                preco = float("{:.2f}".format(novo_preco))
-                return preco
-            except:
-                print("Valor inválido, coloque um número nestes modelos: 21.124, 5, 2.0")
-
-    def define_estoque(self):
-        while True:
-            entrada_estoque = input("Quantidade do estoque: ")
-            try:
-                estoque = int(entrada_estoque)
-                return estoque
-            except:
-                print("Valor inválido, coloque um número inteiro")
+            return [values[0], price_to_float, stock_to_int]
+        except:
+            self.dialogBox('Erro', 'Algum campo contém erro!', True)
 
     def mostra_opcoes(self):
-        print("--------------------------")
-        print("ESCOLHA 1 2 3 OU 0 PARA NAVEGAR")
-        print("1 - VER PRODUTOS")
-        print("2 - CADASTRAR PRODUTO")
-        print("3 - ALTERAR PRODUTO")
-        print("4 - DELETAR PRODUTO")
-        print("0 - VOLTAR")
-        print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", [1, 2, 3, 4, 0])
-        return opcao
+        return self.lista_opcoes(
+            ['Ver produtos', 'Cadastrar produtos'], 'Modificar produtos'
+        )
 
-    def tela_ver_produto(self, produtos):
-        print("--------------------------")
-        print("PRODUTOS CADASTRADOS:")
+    def tela_ver_produtos(self, produtos):
+        sg.ChangeLookAndFeel('Reddit')
+
+        switcher = {}
         if len(produtos) == 0:
-            print("Não há produtos cadastrados")
-        for produto in produtos:
-            print("{} / R${} / x{}".format(produto.nome, produto.preco, produto.estoque))
-        print("0 - VOLTAR")
-        opcao = self.le_inteiro("Escolha uma opção: ", [0])
-        if opcao == 0:
-            return None
+            layout = [
+                [sg.Text('Não há produtos cadastrados', size=(30, 1))],
+            ]
+        else:
+            layout = []
+            for produto in produtos:
+                print(produto)
+                layout.append(
+                    [sg.Button(produto.nome, size=(20, 2))]
+                )
+                switcher[produto.nome] = produto
+        layout.append(
+            [sg.Button('   Voltar   ', size=(20, 2))]
+        )
+
+        window = sg.Window('Produtos').Layout(layout)
+        button = window.Read()
+
+        switcher['   Voltar   '] = 0
+
+        window.close()
+        return switcher.get(button[0])
 
     def tela_cadastra_produto(self):
-        print("--------------------------")
-        print("CADASTRO DE PRODUTO")
-        nome = self.define_nome()
-        preco = self.define_preco()
-        estoque = self.define_estoque()
-        print("--------------------------")
-        print("1 - CONFIRMAR")
-        print("0 - VOLTAR")
-        print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", [1, 0])
-        if opcao == 1:
-            return [nome, preco, estoque]
-        elif opcao == 0:
-            return None
+        while True:
+            sg.ChangeLookAndFeel('Reddit')
 
-    def tela_altera_produto(self, produtos):
-        print("--------------------------")
-        if len(produtos) == 0:
-            print("Não há produtos cadastrados")
-        else:
-            print("ESCOLHA O PRODUTO QUE DESEJA ALTERAR")
-        posicao = 0
-        produto_por_posicao = {}
-        lista_opcoes = []
-        for produto in produtos:
-            posicao += 1
-            print("{} - {} / R${} / x{}".format(posicao, produto.nome, produto.preco, produto.estoque))
-            produto_por_posicao[posicao] = produto
-            lista_opcoes.append(posicao)
-        lista_opcoes.append(0)
-        print("0 - VOLTAR")
-        print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", lista_opcoes)
-        if opcao == 0:
-            return None
-        else:
-            produto_alterado = produto_por_posicao.get(opcao)
-            novo_nome = self.define_nome()
-            novo_preco = self.define_preco()
-            novo_estoque = self.define_estoque()
-            return [produto_alterado, novo_nome, novo_preco, novo_estoque]
+            layout = [
+                [sg.Text('Nome', size=(20, 1)),
+                 sg.InputText('', size=(20, 2))],
+                [sg.Text('Preço', size=(20, 1)),
+                 sg.InputText(float(), size=(20, 2))],
+                [sg.Text('Estoque', size=(20, 1)),
+                 sg.InputText(int(), size=(20, 2))],
+                [sg.Button('   Voltar   ', size=(10, 1)),
+                 sg.Submit('Cadastrar', size=(10, 1))]
+            ]
 
-    def tela_deleta_produto(self, produtos):
-        print("--------------------------")
-        if len(produtos) == 0:
-            print("Não há produtos cadastrados")
-        else:
-            print("ESCOLHA O PRODUTO QUE DESEJA DELETAR")
-        posicao = 0
-        produto_por_posicao = {}
-        lista_opcoes = []
-        for produto in produtos:
-            posicao += 1
-            print("{} - {}".format(posicao, produto.nome))
-            produto_por_posicao[posicao] = produto
-            lista_opcoes.append(posicao)
-        lista_opcoes.append(0)
-        print("0 - VOLTAR")
-        print("--------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", lista_opcoes)
-        if opcao == 0:
-            return None
-        else:
-            produto_alterado = produto_por_posicao.get(opcao)
-            while True:
-                resposta = input(str("Tem certeza que quer deletar o produto {}? s/n: ".format(produto_alterado.nome)))
-                if resposta == "s":
-                    return [produto_alterado]
-                elif resposta == "n":
-                    return None
-                else:
-                    print("Resposta inválida, por favor responda com s ou n")
-            
-            
+            window = sg.Window('Cadastrar produtos').Layout(layout)
+            button, value = window.Read()
 
+            if button == 'Cadastrar':
+                values = [value[0], value[1], value[2]]
+                checked_values = self.check_values(values)
+                if checked_values != None:
+                    window.close()
+                    return checked_values
+            else:
+                window.close()
+                return None
 
-    
-    
+            window.close()
+
+    def tela_edita_produto(self, produto):
+        while True:
+            sg.ChangeLookAndFeel('Reddit')
+
+            layout = [
+                [sg.Text('Nome', size=(20, 1)),
+                sg.InputText(produto.nome, size=(20, 2))],
+                [sg.Text('Preço', size=(20, 1)),
+                sg.InputText(produto.preco, size=(20, 2))],
+                [sg.Text('Estoque inicial', size=(20, 1)),
+                sg.InputText(produto.estoque, size=(20, 2))],
+                [sg.Button('  Voltar  '), sg.Submit(
+                    'Atualizar'), sg.Button('Deletar')]
+            ]
+
+            window = sg.Window('Editar produto').Layout(layout)
+            button, value = window.Read()
+
+            if button == '  Voltar  ':
+                window.close()
+                return 0
+            elif button == 'Deletar':
+                self.dialogBox('Produto', 'Você deletou o produto {}'.format(produto.nome), False)
+                window.close()
+                return 1
+            elif button == 'Atualizar':
+                checked_values = self.check_values([value[0], value[1], value[2]])
+                if (checked_values != None):
+                    if checked_values[0] != produto.nome or checked_values[1] != produto.preco or checked_values[2] != produto.estoque:
+                        self.dialogBox('Produto', 'Você atualizou o produto {} com sucesso!'.format(produto.nome), False)
+                        window.close()
+                        return checked_values      
+                    else:
+                        self.dialogBox('Produto', 'Modifique algum campo para atualizar', False)
+            window.close()
+

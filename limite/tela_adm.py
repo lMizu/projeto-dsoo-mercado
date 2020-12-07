@@ -1,30 +1,47 @@
-from limite.tela_le_inteiro import TelaLeInteiro
+from limite.tela_base import TelaBase
+import PySimpleGUI as sg
 
-class TelaAdm(TelaLeInteiro):
-    def __init__ (self, controlador):
+
+class TelaAdm(TelaBase):
+    def __init__(self, controlador):
         self.__controlador = controlador
 
-    def tela_login_adm (self):
-        print("----------------------------------------")
-        nome = input(str("coloque o Login: "))
-        senha = input(str("coloque a Senha: "))
-        print("1 - ENTRA")
-        print("0 - VOLTAR")
-        print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 0])
-        if opcao == 1:
-            return [nome, senha]
+    def tela_login_adm(self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+            [sg.Text('Coloque seu login', size=(20, 1)),
+             sg.InputText('', size=(20, 2))],
+            [sg.Text('Coloque sua senha', size=(20, 1)),
+             sg.InputText('', size=(20, 2))],
+            [sg.Submit('Entrar'), sg.Button('Voltar')]
+        ]
+
+        window = sg.Window('Administrador').Layout(layout)
+        button, value = window.Read()
+
+        window.close()
+        if button == 'Entrar':
+            return [value[0], value[1]]
         else:
             return None
 
-    def tela_adm (self):
-        print("-----------------------------")
-        print("Bem vindo Administrador")
-        print("")
-        print("ESCOLHA ENTRE 1 2 E 0 PARA NAVEGAR")
-        print("1 - MODIFICAR PRODUTOS")
-        print("2 - VER REGISTROS")
-        print("0 - VOLTAR")
-        print("-----------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [1, 2, 0])
-        return opcao
+    def tela_adm(self):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+            [sg.Button('Modificar produtos', size=(20, 2))],
+            [sg.Button('Ver registros', size=(20, 2))],
+            [sg.Button('Voltar', size=(20, 2))]
+        ]
+        window = sg.Window('Administrador').Layout(layout)
+        button = window.Read()
+
+        switcher = {
+            'Modificar produtos': 1,
+            'Ver registros': 2,
+            'Voltar': 0
+        }
+
+        window.close()
+        return switcher.get(button[0])

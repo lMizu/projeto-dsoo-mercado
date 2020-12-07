@@ -2,13 +2,15 @@ from limite.tela_cliente import TelaCliente
 from entidade.cliente import Cliente
 from entidade.produto import Produto
 from controle.controlador_adm import ControladorAdm
+from dao.cliente_dao import ClienteDao
+from dao.produto_dao import ProdutoDao
 import sys
 
 
 class ControladorCliente:
     def __init__ (self, adm):
+        self.__cliente_dao = ClienteDao()
         self.__tela_cliente = TelaCliente(self)
-        self.__clientes = []
         self.__adm = adm
 
     def inicia (self):
@@ -22,41 +24,38 @@ class ControladorCliente:
             else:
                 cliente = self.verifica_entrada(inputs[0], inputs[1])
                 if cliente != None:
-                    print("--------------------------")
-                    print("Prazer {}".format(cliente.nome))
-                    print("")
                     switcher = {1: self.ver_lista_de_produtos, 2: self.ver_carrinho, 3: self.remover_do_carrinho, 4: self.limpar_carrinho, 5: self.finalizar_compra, 0: None}
 
                     while True:
-                        opcao = self.__tela_cliente.tela_cliente()
+                        opcao = self.__tela_cliente.tela_cliente(cliente.nome)
                         if opcao == 0:
                             return switcher[opcao]
 
                         funcao_escolhida = switcher[opcao]
                         funcao_escolhida(cliente)
                 else:
-                    print("dados incorretos")
+                    self.__tela_cliente.tela_erro()
 
     def verifica_entrada (self, nome, senha):
-        for cliente in self.clientes():
+        print(self.__cliente_dao.get_all())
+        for cliente in self.__cliente_dao.get_all():
             if ((cliente.nome == nome) or (cliente.cpf == nome)) and (cliente.senha == senha):
                 return cliente
         return None
 
     def ver_carrinho (self, cliente):
         while True:
-            opcao = self.__tela_cliente.tela_ver_carrinho(cliente.carrinho())
+            opcao = self.__tela_cliente.tela_ver_produtos(cliente.carrinho())
             if opcao == 0:
                 return None
 
     def ver_lista_de_produtos (self, cliente):
-        while True:    
-            lista = self.__adm.controlador_produto.produtos()
-            produto = self.__tela_cliente.colocar_item_no_carrinho(lista)
-            if produto == None:
+        while True:
+            opcao = self.__tela_cliente.tela_ver_produtos(self.__adm.controlador_produto.produtos)
+            if opcao == 0:
                 return None
             else:
-                self.coloca_no_carrinho(cliente, produto)
+                self.coloca_no_carrinho(cliente, opcao)
         
     def coloca_no_carrinho (self, cliente, produto):
         cliente.carrinho().append(produto)
@@ -67,25 +66,22 @@ class ControladorCliente:
 
     def remover_do_carrinho (self, cliente):
         while True:
-            self.ver_carrinho(cliente)
-            print("0 - VOLTAR")
-            opcao = self.__tela_cliente.remove_do_carrinho(cliente.carrinho())
+            opcao = self.__tela_cliente.remcarrinho(cliente.carrinho())
             if opcao == None:
                 return None
-            cliente.remove_do_carrinho(opcao)
+            else:
+                cliente.remove_do_carrinho(opcao)
 
     def limpar_carrinho (self, cliente):
         opcao = self.__tela_cliente.limpar_carrinho()
         if opcao:
             cliente.limpa_carrinho()
-            print("CARRINHO LIMPO")
-            print("----------------------------------------")
+            self.__tela_cliente.limpar_sucesso()
             return None
         else:
             return None
 
     def finalizar_compra (self, cliente):
-        #self.ver_carrinho(cliente)
         valor_da_compra = 0
         desconto = 0
         for item in cliente.carrinho():
@@ -96,8 +92,11 @@ class ControladorCliente:
                 if item.estoque > 0:
                     novo_estoque = item.estoque - 1
                     if item not in self.__adm.controlador_registro.produtos_excluidos():
-                        posicao = self.__adm.controlador_produto.produtos().index(item)
-                        self.__adm.controlador_produto.produtos()[posicao].estoque = novo_estoque
+                        produto_dao = self.__adm.controlador_produto.produtoDao()
+                        produto_antigo_estoque = produto_dao.get(item.nome)
+                        produto_alterado = Produto(produto_antigo_estoque.nome, produto_antigo_estoque.preco, novo_estoque)
+                        produto_dao.remove(produto_antigo_estoque.nome)
+                        produto_dao.add(produto_alterado)
                     else:
                         desconto += item.preco
                         print("Sem estoque de {}".format(item.nome))
@@ -115,8 +114,9 @@ class ControladorCliente:
         else:
             return None
 
+    @property
     def clientes (self):
-        return self.__clientes
+        return self.__cliente_dao.get_all()
 
     def voltar (self):
         return "fim"
@@ -131,19 +131,18 @@ class ControladorCliente:
             verificacao = self.existe(novo_cliente)
             if verificacao == False:
                 self.__adm.controlador_registro.cliente_foi_incluido(novo_cliente)
-                self.__clientes.append(novo_cliente)
-                print("cadastrado com sucesso")
+                print(novo_cliente)
+                self.__cliente_dao.add(novo_cliente)
+                print(self.__cliente_dao.get_all())
+                self.__tela_cliente.cadastro_sucesso()
                 return None
-            else:
-                print(verificacao)
-                print("Informe dados validos")
         
     def existe (self, novo_cliente):
-        for cliente in self.__clientes:
+        for cliente in self.__cliente_dao.get_all():
             if cliente.nome == novo_cliente.nome:
-                return "Este nome ja foi escolhido"
+                return self.__tela_cliente.fracasso_nome()
             if cliente.cpf == novo_cliente.cpf:
-                return "Este cpf ja foi escolhido"
+                return self.__tela_cliente.fracasso_cpf()
         return False
 
     def abre_tela_cliente(self):

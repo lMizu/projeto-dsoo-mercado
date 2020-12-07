@@ -41,7 +41,8 @@ class Cliente:
         return self.__carrinho
 
     def remove_do_carrinho (self, posicao):
-        self.__carrinho.pop(posicao - 1)
+        print(posicao)
+        self.__carrinho.pop(posicao)
 
     def limpa_carrinho (self):
         self.__carrinho = []

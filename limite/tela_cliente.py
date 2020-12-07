@@ -120,8 +120,6 @@ class TelaCliente(TelaBase):
 
         return opcao
 
-
-
     def tela_cadastro (self):
         while True:
             sg.ChangeLookAndFeel('Reddit')
@@ -163,36 +161,19 @@ class TelaCliente(TelaBase):
             window.Read()
             window.close()
 
-    def colocar_item_no_carrinho (self, lista_de_produtos):
-        print("----------------------------")
-        if len(lista_de_produtos) == 0:
-                print("Não há produtos no mercado")
-        else:
-            print("ESCOLHA O PRODUTO QUE DESEJA ADICIONAR AO CARRINHO")
-            posicao = 0
-            produto_por_posicao = {}
-            lista_opcoes = []
-            for produto in lista_de_produtos:
-                posicao += 1
-                print("{} - {} / R${} / x{}".format(posicao, produto.nome, produto.preco, produto.estoque))
-                produto_por_posicao[posicao] = produto
-                lista_opcoes.append(posicao)
-            lista_opcoes.append(0)
-            print("0 - VOLTAR")
-            print("--------------------------")
-            opcao = self.le_inteiro("Escolha uma opção: ", lista_opcoes)
-            if opcao == 0:
-                return None
-            else:
-                return produto_por_posicao.get(opcao)
 
     def tela_adicionado_ao_carrinho(self):
-        print("----------------------------")
-        print("ADICIONADO COM SUCESSO")
-        print("0 - OK")
-        print("----------------------------")
-        opcao = self.le_inteiro("Escolha uma opção: ", [0])
-        return opcao
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text("Item adicionado com sucesso!")],
+                    [sg.Button('Voltar', size=(20, 2))]
+                ]
+        window = sg.Window('Carrinho').Layout(layout)
+        button = window.Read()
+        if button[0] == 'Voltar':
+            window.close()
+            return 0
 
     def tela_ver_produtos(self, produtos):
         sg.ChangeLookAndFeel('Reddit')
@@ -200,7 +181,7 @@ class TelaCliente(TelaBase):
         switcher = {}
         if len(produtos) == 0:
             layout = [
-                [sg.Text('Não há produtos cadastrados', size=(30, 1))],
+                [sg.Text('Não há produtos', size=(30, 1))],
             ]
         else:
             layout = []
@@ -220,17 +201,6 @@ class TelaCliente(TelaBase):
 
         window.close()
         return switcher.get(button[0])
-
-    def tela_ver_carrinho(self, carrinho):
-        print("----------------------------")
-        if len(carrinho) == 0:
-            print("CARRINHO VAZIO")
-        for item in carrinho:
-            print("- {}".format(item.nome))
-        print("0 - VOLTAR")
-        print("----------------------------------------")
-        opcao = self.le_inteiro("Escolha uma opcao: ", [0])
-        return opcao
 
     def lista (self, tamanho):
         nova_lista = []
@@ -269,6 +239,32 @@ class TelaCliente(TelaBase):
         window.close()
         return opcao
 
+    def remcarrinho (self, produtos):
+        sg.ChangeLookAndFeel('Reddit')
+
+        switcher = {}
+        if len(produtos) == 0:
+            layout = [
+                [sg.Text('Não há produtos', size=(30, 1))],
+            ]
+        else:
+            layout = []
+            for i in range(len(produtos)):
+                layout.append(
+                    [sg.Button(produtos[i].nome, size=(20, 2), key="{}".format(i))]
+                )
+                switcher["{}".format(i)] = i
+        layout.append(
+            [sg.Button('   Voltar   ', size=(20, 1))]
+        )
+
+        window = sg.Window('Produtos').Layout(layout)
+        button = window.Read()
+        switcher['   Voltar   '] = None
+
+        window.close()
+        return switcher.get(button[0])
+
     def limpar_sucesso (self):
         sg.ChangeLookAndFeel('Reddit')
 
@@ -304,8 +300,8 @@ class TelaCliente(TelaBase):
         sg.ChangeLookAndFeel('Reddit')
 
         layout = [
-                    [sg.Input("Coloque o endereço de sua carteira")],
-                    [sg.Button('Pagar', size=(20, 2))]
+                    [sg.Text("Coloque o endereço de sua carteira: "), sg.Input()],
+                    [sg.Button('Pagar', size=(10, 2))]
                 ]
         window = sg.Window('Cliente').Layout(layout)
         window.Read()

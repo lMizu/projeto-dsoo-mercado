@@ -2,13 +2,14 @@ from limite.tela_cliente import TelaCliente
 from entidade.cliente import Cliente
 from entidade.produto import Produto
 from controle.controlador_adm import ControladorAdm
+from dao.cliente_dao import ClienteDao
 import sys
 
 
 class ControladorCliente:
     def __init__ (self, adm):
+        self.__cliente_dao = ClienteDao()
         self.__tela_cliente = TelaCliente(self)
-        self.__clientes = []
         self.__adm = adm
 
     def inicia (self):
@@ -35,14 +36,15 @@ class ControladorCliente:
                     self.__tela_cliente.tela_erro()
 
     def verifica_entrada (self, nome, senha):
-        for cliente in self.clientes():
+        print(self.__cliente_dao.get_all())
+        for cliente in self.__cliente_dao.get_all():
             if ((cliente.nome == nome) or (cliente.cpf == nome)) and (cliente.senha == senha):
                 return cliente
         return None
 
     def ver_carrinho (self, cliente):
         while True:
-            opcao = self.__tela_cliente.tela_ver_carrinho(cliente.carrinho())
+            opcao = self.__tela_cliente.tela_ver_produtos(cliente.carrinho())
             if opcao == 0:
                 return None
 
@@ -63,12 +65,11 @@ class ControladorCliente:
 
     def remover_do_carrinho (self, cliente):
         while True:
-            self.ver_carrinho(cliente)
-            print("0 - VOLTAR")
-            opcao = self.__tela_cliente.remove_do_carrinho(cliente.carrinho())
+            opcao = self.__tela_cliente.remcarrinho(cliente.carrinho())
             if opcao == None:
                 return None
-            cliente.remove_do_carrinho(opcao)
+            else:
+                cliente.remove_do_carrinho(opcao)
 
     def limpar_carrinho (self, cliente):
         opcao = self.__tela_cliente.limpar_carrinho()
@@ -109,8 +110,9 @@ class ControladorCliente:
         else:
             return None
 
+    @property
     def clientes (self):
-        return self.__clientes
+        return self.__cliente_dao.get_all()
 
     def voltar (self):
         return "fim"
@@ -125,12 +127,14 @@ class ControladorCliente:
             verificacao = self.existe(novo_cliente)
             if verificacao == False:
                 self.__adm.controlador_registro.cliente_foi_incluido(novo_cliente)
-                self.__clientes.append(novo_cliente)
+                print(novo_cliente)
+                self.__cliente_dao.add(novo_cliente)
+                print(self.__cliente_dao.get_all())
                 self.__tela_cliente.cadastro_sucesso()
                 return None
         
     def existe (self, novo_cliente):
-        for cliente in self.__clientes:
+        for cliente in self.__cliente_dao.get_all():
             if cliente.nome == novo_cliente.nome:
                 return self.__tela_cliente.fracasso_nome()
             if cliente.cpf == novo_cliente.cpf:

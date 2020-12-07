@@ -24,5 +24,6 @@ class TelaInicial(TelaBase):
         if button[0] == 'Sair': 
             opcao = 0
         window.close()
+        
         return opcao
         

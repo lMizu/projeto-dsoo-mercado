@@ -1,8 +1,7 @@
-from limite.tela_le_inteiro import TelaLeInteiro
-#from tkinter import *
+from limite.tela_base import TelaBase
 import PySimpleGUI as sg
 
-class TelaInicial(TelaLeInteiro):
+class TelaInicial(TelaBase):
     def __init__ (self, controlador):
         self.__window = None
         #self.init_components()
@@ -12,9 +11,9 @@ class TelaInicial(TelaLeInteiro):
         sg.ChangeLookAndFeel('Reddit')
 
         layout = [
-                    [sg.Text('Entrar como cliente', size=(20, 1)), sg.Button('Login', size=(7, 1))],
-                    [sg.Text('Entrar como administrador', size=(20, 1)), sg.Button('Gerenciar', size=(7, 1))],
-                    [sg.Button('Sair', size=(29, 1))]
+                    [sg.Text('Entrar como cliente', size=(20, 1)), sg.Button('Login', size=(10, 1))],
+                    [sg.Text('Entrar como administrador', size=(20, 1)), sg.Button('Gerenciar', size=(10, 1))],
+                    [sg.Button('Sair', size=(33, 1))]
                 ]
         window = sg.Window('Mercado').Layout(layout)
         button = window.Read()

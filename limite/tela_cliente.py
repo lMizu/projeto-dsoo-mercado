@@ -1,7 +1,7 @@
-from limite.tela_le_inteiro import TelaLeInteiro
+from limite.tela_base import TelaBase
 import PySimpleGUI as sg
 
-class TelaCliente(TelaLeInteiro):
+class TelaCliente(TelaBase):
     def __init__ (self, controlador):
         self.__controlador = controlador
 

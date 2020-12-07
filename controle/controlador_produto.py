@@ -10,6 +10,10 @@ class ControladorProduto:
         self.__tela_produto = TelaProduto(self)
         self.__produtos = []
 
+    def tela (self):
+        return self.__tela_produto
+
+    @property
     def produtos(self):
         return self.__produtos
 

@@ -120,6 +120,8 @@ class TelaCliente(TelaBase):
 
         return opcao
 
+
+
     def tela_cadastro (self):
         while True:
             sg.ChangeLookAndFeel('Reddit')
@@ -191,6 +193,33 @@ class TelaCliente(TelaBase):
         print("----------------------------")
         opcao = self.le_inteiro("Escolha uma opção: ", [0])
         return opcao
+
+    def tela_ver_produtos(self, produtos):
+        sg.ChangeLookAndFeel('Reddit')
+
+        switcher = {}
+        if len(produtos) == 0:
+            layout = [
+                [sg.Text('Não há produtos cadastrados', size=(30, 1))],
+            ]
+        else:
+            layout = []
+            for i in range(len(produtos)):
+                layout.append(
+                    [sg.Button(produtos[i].nome, size=(20, 2))]
+                )
+                switcher[produtos[i].nome] = produtos[i]
+        layout.append(
+            [sg.Button('   Voltar   ', size=(20, 1))]
+        )
+
+        window = sg.Window('Produtos').Layout(layout)
+        button = window.Read()
+
+        switcher['   Voltar   '] = 0
+
+        window.close()
+        return switcher.get(button[0])
 
     def tela_ver_carrinho(self, carrinho):
         print("----------------------------")

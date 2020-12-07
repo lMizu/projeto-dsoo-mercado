@@ -47,13 +47,12 @@ class ControladorCliente:
                 return None
 
     def ver_lista_de_produtos (self, cliente):
-        while True:    
-            lista = self.__adm.controlador_produto.produtos()
-            produto = self.__tela_cliente.colocar_item_no_carrinho(lista)
-            if produto == None:
+        while True:
+            opcao = self.__tela_cliente.tela_ver_produtos(self.__adm.controlador_produto.produtos)
+            if opcao == 0:
                 return None
             else:
-                self.coloca_no_carrinho(cliente, produto)
+                self.coloca_no_carrinho(cliente, opcao)
         
     def coloca_no_carrinho (self, cliente, produto):
         cliente.carrinho().append(produto)
@@ -91,8 +90,8 @@ class ControladorCliente:
                 if item.estoque > 0:
                     novo_estoque = item.estoque - 1
                     if item not in self.__adm.controlador_registro.produtos_excluidos():
-                        posicao = self.__adm.controlador_produto.produtos().index(item)
-                        self.__adm.controlador_produto.produtos()[posicao].estoque = novo_estoque
+                        posicao = self.__adm.controlador_produto.produtos.index(item)
+                        self.__adm.controlador_produto.produtos[posicao].estoque = novo_estoque
                     else:
                         desconto += item.preco
                         print("Sem estoque de {}".format(item.nome))

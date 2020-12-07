@@ -1,5 +1,6 @@
 from limite.tela_produto import TelaProduto
 from entidade.produto import Produto
+from dao.produto_dao import ProdutoDao
 import sys
 
 
@@ -17,7 +18,8 @@ class ControladorProduto:
 
     def lista_produtos(self):
         while True:
-            opcao = self.__tela_produto.tela_ver_produtos(self.__produtos)
+            opcao = self.__tela_produto.tela_ver_produtos(
+                self.__produtos)
             if opcao == 0:
                 return None
             else:
@@ -28,17 +30,15 @@ class ControladorProduto:
             dados = self.__tela_produto.tela_cadastra_produto()
             if dados != None:
                 novo_produto = Produto(dados[0], dados[1], dados[2])
+                if self.existe(novo_produto):
+                    #Adicionar dialog
+                    return None
+                else:
+                    self.__adm.controlador_registro.produto_foi_incluido(
+                        novo_produto)
+                    self.__produtos.append(novo_produto)
+                    return None
             else:
-                return None
-            
-            #Remover prints e adicionar dialogs
-            if self.existe(novo_produto):
-                print("Um produto com este mesmo nome já foi cadastrado")
-            else:
-                self.__adm.controlador_registro.produto_foi_incluido(
-                    novo_produto)
-                self.__produtos.append(novo_produto)
-                print("Produto cadastrado com sucesso")
                 return None
 
     def edita_produto(self, produto):

@@ -119,3 +119,22 @@ class TelaBase:
                 return values
             elif button == '   Voltar   ':
                 return None
+
+    def dialogBox(self, title, message, tryAgain: bool):
+        sg.ChangeLookAndFeel('Reddit')
+
+        layout = [
+                    [sg.Text(message)],
+                ]
+        if tryAgain:
+            layout.append(
+                [sg.Button('Tentar novamente')]
+            )
+        else:
+            layout.append(
+                [sg.Button('OK')]
+            )
+        
+        window = sg.Window(title).Layout(layout)
+        window.Read()
+        window.close()

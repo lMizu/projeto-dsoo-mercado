@@ -16,7 +16,7 @@ class TelaProduto(TelaBase):
 
             return [values[0], price_to_float, stock_to_int]
         except:
-            return 'Error'
+            self.dialogBox('Erro', 'Algum campo contém erro!', True)
 
     def mostra_opcoes(self):
         return self.lista_opcoes(
@@ -51,34 +51,33 @@ class TelaProduto(TelaBase):
         return switcher.get(button[0])
 
     def tela_cadastra_produto(self):
-        sg.ChangeLookAndFeel('Reddit')
+        while True:
+            sg.ChangeLookAndFeel('Reddit')
 
-        layout = [
-            [sg.Text('Nome', size=(20, 1)),
-            sg.InputText('', size=(20, 2))],
-            [sg.Text('Preço', size=(20, 1)),
-            sg.InputText(float(), size=(20, 2))],
-            [sg.Text('Estoque', size=(20, 1)),
-            sg.InputText(int(), size=(20, 2))],
-            [sg.Button('   Voltar   ', size=(10, 1)),sg.Button('Cadastrar', size=(10, 1))]
-        ]
+            layout = [
+                [sg.Text('Nome', size=(20, 1)),
+                sg.InputText('', size=(20, 2))],
+                [sg.Text('Preço', size=(20, 1)),
+                sg.InputText(float(), size=(20, 2))],
+                [sg.Text('Estoque', size=(20, 1)),
+                sg.InputText(int(), size=(20, 2))],
+                [sg.Button('   Voltar   ', size=(10, 1)),sg.Button('Cadastrar', size=(10, 1))]
+            ]
 
-        window = sg.Window('Cadastrar produtos').Layout(layout)
-        button, value = window.Read()
+            window = sg.Window('Cadastrar produtos').Layout(layout)
+            button, value = window.Read()
 
-        window.close()
-
-        if button == 'Cadastrar':
-            values = [value[0], value[1], value[2]]
-            checked_values = self.check_values(values)
-            if checked_values != 'Error':
-                return checked_values
+            if button == 'Cadastrar':
+                values = [value[0], value[1], value[2]]
+                checked_values = self.check_values(values)
+                if checked_values != None:
+                    window.close()
+                    return checked_values
             else:
-                #mostrar dialog de erro dos campos
+                window.close()
                 return None
-        else:
+
             window.close()
-            return None
 
     def tela_edita_produto(self, produto):
         sg.ChangeLookAndFeel('Reddit')

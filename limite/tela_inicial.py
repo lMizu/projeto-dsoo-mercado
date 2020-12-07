@@ -4,7 +4,6 @@ import PySimpleGUI as sg
 class TelaInicial(TelaBase):
     def __init__ (self, controlador):
         self.__window = None
-        #self.init_components()
         self.__controlador = controlador
 
     def mostra_tela_opcoes (self):

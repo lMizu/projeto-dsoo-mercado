@@ -128,11 +128,11 @@ class TelaBase:
                 ]
         if tryAgain:
             layout.append(
-                [sg.Button('Tentar novamente')]
+                [sg.Submit('Tentar novamente')]
             )
         else:
             layout.append(
-                [sg.Button('OK')]
+                [sg.Submit('OK')]
             )
         
         window = sg.Window(title).Layout(layout)

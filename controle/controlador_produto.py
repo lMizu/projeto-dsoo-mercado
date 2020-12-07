@@ -44,13 +44,12 @@ class ControladorProduto:
     def edita_produto(self, produto):
         while True:
             dados = self.__tela_produto.tela_edita_produto(produto)
-            if dados == 0:
+            if dados == 0 or dados == None:
                 return None
             elif dados == 1:
-                # confirmar remoção
                 self.__produtos.remove(produto)
                 self.__adm.controlador_registro.produto_foi_excluido(produto)
-                # excluido com sucesso
+                return None
             else:
                 produto_velho = Produto(
                     produto.nome, produto.preco, produto.estoque)
@@ -59,7 +58,6 @@ class ControladorProduto:
                 produto.nome = dados[0]
                 produto.preco = dados[1]
                 produto.estoque = dados[2]
-                # atualizado com sucesso
 
     def sair(self):
         return "fim"
